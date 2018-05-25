@@ -1,0 +1,9 @@
+﻿Plaintext : The Magic Words are Squeamish Ossifrage									
+Encrypted : AJcB5nKCoX6WT3wlkmANBVHwQTjTOr/NoVRCr8f500ywADKQD2vJ4/SAzVStJ3wVr4LgORgL/n+O89+7YP8Xzqev351fXkC47yXiXAYGJ585sFQuONz+3XdI4NI9mc6wqBm6q1rlIGYeMyqunBWuyQ==
+
+Plaintext : ID_Embassy-->Embassy_Name,District,Street,Num,Country_ID,Country_Name,City_ID,City_Name;
+A_ID-->Name,Surname,ID_Embassy,Embassy_Name,District,Street,Num,Country_ID,Country_Name,City_ID,City_Name;
+Country_ID-->Country_Name;
+City_ID-->City_Name,Country_ID,Country_Name;
+Encrypted : p3g2YNv7cu1ojng3mmvnBDU4UOLPTCq8w+m/+oxrK3mEjU0TDVNAmULmjNo/pm/SP8Upn9IMMB68dJ1y8eFD5k8vGmmoBZq77OLMLTSACDBot+c6mnB15HXKno/Nejuuo6ziNHKdN88j4gjULkaRyJ+Or//fpe6LkA2myDmd5W7OSDpKpXsYH+1hFVggx9wVJo0RePCoiePlnksS44hgLh6gkPPzxtKHBdq4IB6Zpro/aztGbWwcRTY1X8ypIx+uIaaVVumii7n7xSjn3wOGv0+MCz0r69jUblsJtAghrnCs4F/oGNBcQj2+UakNVd/bAvun91qM9qB7pdvFwOHABvOYFd+cBjO3qJIA8TWvrtKgo16FrWg0xIUQ19Aj39yNTMMDpD2UGQ7CW+cTJTuxxEjo7ADHpEHK7xCdT8BisZY=
+

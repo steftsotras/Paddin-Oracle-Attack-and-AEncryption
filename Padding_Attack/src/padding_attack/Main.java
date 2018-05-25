@@ -4,23 +4,25 @@
  * and open the template in the editor.
  */
 package padding_attack;
+import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -30,9 +32,16 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.SwingWorker;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.border.LineBorder;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.SimpleAttributeSet;
 import static padding_attack.Padding_Attack.startAttack;
 
 /**
@@ -46,12 +55,17 @@ public class Main implements ActionListener{
     //JCOMPONENTS
     private JFrame frame;
     private JPanel wholepanel;
-    private JButton attack,enc,save,exit;
+    private JButton attack,enc,save,show,exit;
     private JLabel label,label2,label3,label4;
     private JProgressBar progressBar;
     private JFileChooser fc;
+    private File encrypted_data;
+    JScrollPane jScrollPane;
     
     public Main(){
+        
+        encrypted_data = new File("encrypted.txt");
+        
         
         //GRAFIKO PERIVALON 
         frame = new JFrame("Crypto");
@@ -115,6 +129,11 @@ public class Main implements ActionListener{
         label4 = new JLabel("");
         wholepanel.add(label4);
         label4.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        show = new JButton("Show Encrypted");
+        wholepanel.add(show);
+        show.setAlignmentX(Component.CENTER_ALIGNMENT);
+        show.addActionListener(this);
          
         wholepanel.add(Box.createRigidArea(new Dimension(0,45)));
         
@@ -122,6 +141,7 @@ public class Main implements ActionListener{
         wholepanel.add(exit);
         exit.setAlignmentX(Component.CENTER_ALIGNMENT);
         exit.addActionListener(this);
+        
         
         fc = new JFileChooser();
         
@@ -152,11 +172,15 @@ public class Main implements ActionListener{
             
             attack.setEnabled(false);
             
+            //THREAD POU KANEI TO ATTACK
+            //ETSI O XRHSTHS MPOREI NA XRHSIMOPOIEI THN UPOLOIPH
+            //EFARMOGH XWRIS NA XREIAZETAI NA PERIMENEI NA TELIWSEI
+            //H XRONOVORA EPITHESH
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     progressBar.setVisible(true);
-                    // do my stuff here...
+                    
                     String words = "";
                     try {
                       words = startAttack();
@@ -212,17 +236,28 @@ public class Main implements ActionListener{
                     br.close();
                     
                     String plaintext = sb.toString();
+                    
+                    //DHMIOURGIA KLEIDIWN
                     String k1 = generateKey();
                     String k2 = generateKey();
                     
                     
-                    label4.setText("Encryption key: " + k1+"\nAuthorisation key: " + k2+"\nPlaintext: " + plaintext);
+                    String message = "Encryption key: " + k1+"\nAuthorisation key: " + k2+"\nPlaintext: " + plaintext;
+                    JOptionPane.showMessageDialog(wholepanel, message,"info", JOptionPane.INFORMATION_MESSAGE);
                     
-                    AuthenticatedEncryption aE = new AuthenticatedEncryption(k1, k2);
-                    String encrypted = aE.encrypt(plaintext);
                     
-                    label2.setText("Authenticated and encrypted plaintext: " + encrypted);
+                    String encrypted_text = (new AuthenticatedEncryption(k1, k2)).encrypt(plaintext);
                     
+                    try (PrintWriter out = new PrintWriter(new FileWriter(encrypted_data, true))) {
+                        out.append("Plaintext : "+plaintext);
+                        out.append("Encrypted : "+encrypted_text);
+                        out.append("\n\n");
+                        out.close();
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                    showData();
                      
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -234,13 +269,43 @@ public class Main implements ActionListener{
             }
             
         }
+        else if (e.getSource() == show){
+            
+            try {
+                showData();
+            } catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (BadLocationException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
         else if(e.getSource() == exit){
             System.exit(0);
         }
     }
     
     
-    
+    public void showData() throws IOException, BadLocationException{
+        
+        String data = "";
+        
+        data = new String(Files.readAllBytes(Paths.get(encrypted_data.getAbsolutePath())));
+        
+        JTextPane text = new JTextPane();
+        SimpleAttributeSet attributeSet = new SimpleAttributeSet();
+        Document doc = text.getStyledDocument();  
+        doc.insertString(doc.getLength(), data,attributeSet);
+        text.setPreferredSize(new java.awt.Dimension(500, 400));
+        
+        jScrollPane = new JScrollPane(text);
+        jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        jScrollPane.setViewportBorder(new LineBorder(Color.RED));
+        
+        JOptionPane.showMessageDialog(wholepanel, jScrollPane,"Encrypted texts", JOptionPane.INFORMATION_MESSAGE);
+        
+    }
     
     
     public static void main(String[] args) throws IOException ,Exception{
