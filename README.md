@@ -1,3 +1,3 @@
 # Paddin Oracle Attack and AEncryption
 
-[embed]https://drive.google.com/file/d/1WAx9-FqcWKLqEFy47iaIMlIkxzDQyWV7/view?usp=sharing[/embed]
+[embed]https://github.com/steftsotras/Paddin-Oracle-Attack-and-AEncryption/blob/master/%CE%B1%CF%83%CF%86%CE%B1%CE%BB%CE%B5%CE%B9%CE%B1_3%CE%B7.pdf[/embed]
